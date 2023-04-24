@@ -1,5 +1,6 @@
 import { HeaderGlobal } from '../../components/HeaderGlobal'
-import styles from './styles.module.css'
+import * as Styles from './styles'
+import { useAirportLayoutStore } from '../../stores/airportLayoutStore'
 
 type LayoutAirportProps = {
   children: React.ReactNode;
@@ -7,20 +8,22 @@ type LayoutAirportProps = {
 }
 
 export function LayoutAirport(props: LayoutAirportProps) {
+  const airportLayoutStore = useAirportLayoutStore()
+
   return (
     (
       <>
         <HeaderGlobal />
-        <div className={styles.layout}>
-          <div className={styles['layout__aside']}>
+        <Styles.Layout isOpenSidebar={airportLayoutStore.isOpenSidebar}>
+          <Styles.LayoutAside>
             {
               props.aside && props.aside
             }
-          </div>
-          <div className={styles['layout__main']}>
+          </Styles.LayoutAside>
+          <Styles.LayoutMain>
             { props.children }
-          </div>
-        </div>
+          </Styles.LayoutMain>
+        </Styles.Layout>
       </>
     )
   )

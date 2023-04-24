@@ -77,9 +77,6 @@ export function HeaderGlobal() {
           }
         </Autocomplete>
       </Header.Item>
-      <Header.Item>
-        <Header.Link onClick={() => navigate("/updates")}>Updates</Header.Link>
-      </Header.Item>
       <Header.Item full>
         <Header.Link onClick={() => navigate("/about")}>About</Header.Link>
       </Header.Item>

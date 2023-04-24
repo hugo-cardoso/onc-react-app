@@ -4,9 +4,13 @@
   background-color: var(--color-canvas-inset);
   min-height: calc(100dvh - 64px);
   max-height: calc(100dvh - 64px);
+  position: relative;
 }
 
 .layout__aside {
+  position: absolute;
+  left: 0;
+  top: 0;
   width: 350px;
   min-width: 350px;
   min-height: 100%;
@@ -18,4 +22,13 @@
 .layout__main {
   flex: 1;
   overflow: hidden;
+  padding-left: 350px;
+}
+
+.layout.layout--closed .layout__aside {
+  left: calc(calc(350px - 16px) * -1);
+}
+
+.layout.layout--closed .layout__main {
+  padding-left: 16px;
 }

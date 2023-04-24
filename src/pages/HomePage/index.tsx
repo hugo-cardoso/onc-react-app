@@ -4,6 +4,8 @@ import { HeaderGlobal } from '../../components/HeaderGlobal'
 
 import * as Styles from './styles'
 
+import { DONATION_LINKS, DONATION_TEXT } from '../../constants'
+
 type PixItem = {
   link: string;
   value: number;
@@ -39,12 +41,12 @@ export const HomePage = () => {
           </Box>
         </Styles.Hero>
         <Styles.SupportContainer>
-          <Heading sx={{fontSize: 3}}>Enjoying? Make a donation to the project 💵</Heading>
+          <Heading sx={{fontSize: 3}}>{DONATION_TEXT}</Heading>
           <Styles.SupportCards>
             {
-              pixItems.map((item) => (
+              DONATION_LINKS.map((item) => (
                 <Styles.SupportCard href={item.link} target="_blank" key={item.value}>
-                  <Text sx={{fontSize: 4}}>R$ { item.value.toFixed(2) }</Text>
+                  <Text sx={{fontSize: 4}}>{ item.value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) }</Text>
                 </Styles.SupportCard>
               ))
             }

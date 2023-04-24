@@ -7,9 +7,10 @@ import { Spinner, IconButton, Box, Label, Tooltip, Text } from '@primer/react'
 import { PageHeader } from '@primer/react/drafts'
 
 import * as Styles from './styles'
-import { PinIcon, ShareIcon, XIcon, ZoomInIcon, ZoomOutIcon, ChevronLeftIcon, ChevronRightIcon, IssueReopenedIcon } from "@primer/octicons-react"
+import { PinIcon, ShareIcon, XIcon, ZoomInIcon, ZoomOutIcon, ChevronLeftIcon, ChevronRightIcon, IssueReopenedIcon, SidebarCollapseIcon } from "@primer/octicons-react"
 import { useAirportStore } from "../../stores/airportStore"
 import { PDFPageProxy } from 'react-pdf'
+import { useAirportLayoutStore } from '../../stores/airportLayoutStore'
 
 const ZOOM_SCALE_MAP = [
   1,
@@ -29,6 +30,7 @@ const ROTATE_MAP = [
 export const AirportChartPage = () => {
   const { chartId, icao } = useParams()
   const airportStore = useAirportStore()
+  const airportLayoutStore = useAirportLayoutStore()
   const navigate = useNavigate()
 
   const [isLoading, setIsLoading] = useState(true)
@@ -94,11 +96,27 @@ export const AirportChartPage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    handlePageUpdate();
+  }, [airportLayoutStore.isOpenSidebar])
+
   return (
     <Styles.Container>
       <Styles.Header>
         <PageHeader>
           <PageHeader.TitleArea sx={{alignItems: 'center'}}>
+            {
+              !airportLayoutStore.isOpenSidebar && (
+                <PageHeader.LeadingAction>
+                  <IconButton
+                    aria-label="Expand"
+                    icon={SidebarCollapseIcon}
+                    variant="invisible"
+                    onClick={() => airportLayoutStore.changeSidebar(true)}
+                  />
+                </PageHeader.LeadingAction>
+              )
+            }
             <PageHeader.Title sx={{fontSize: 2, alignItems: 'center'}}>
               <span>{ chart?.name }</span>
               <Label sx={{ml: 2}}>{chart?.type}</Label>
@@ -160,17 +178,20 @@ export const AirportChartPage = () => {
                 )
               }
               <Tooltip aria-label="Pin Chart" direction="s">
-                <IconButton aria-label="Pin Chart" icon={PinIcon} />
+                <IconButton aria-label="Pin Chart" icon={PinIcon} disabled/>
               </Tooltip>
               <Tooltip aria-label="Share Chart" direction="s">
-                <IconButton aria-label="Share Chart" icon={ShareIcon} />
+                <IconButton aria-label="Share Chart" icon={ShareIcon} disabled/>
               </Tooltip>
               <Tooltip aria-label="Close Chart" direction="sw">
                 <IconButton
                   aria-label="Close Chart"
                   icon={XIcon}
                   variant="danger"
-                  onClick={() => navigate(`/app/airport/${icao}`)}
+                  onClick={() => {
+                    navigate(`/app/airport/${icao}`)
+                    airportLayoutStore.changeSidebar(true)
+                  }}
                 />
               </Tooltip>
             </PageHeader.Actions>

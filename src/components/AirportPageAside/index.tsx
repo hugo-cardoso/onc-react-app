@@ -1,6 +1,6 @@
 import { SegmentedControl, Box, TextInput, Spinner, Heading, IconButton, Button } from '@primer/react'
 import { PageHeader } from '@primer/react/drafts'
-import { StarIcon } from '@primer/octicons-react'
+import { SidebarExpandIcon, StarIcon } from '@primer/octicons-react'
 import { useParams } from 'react-router-dom'
 
 import { AirportPageAsideCharts } from '../AirportPageAsideCharts'
@@ -9,6 +9,7 @@ import { AirportPageAsideInfo } from '../AirportPageAsideInfo'
 import * as Styles from './styles'
 import { Airport, AirportViewEnum } from '../../types'
 import { useState } from 'react'
+import { useAirportLayoutStore } from '../../stores/airportLayoutStore'
 
 type AirportPageAsideProps = {
   isLoading: boolean;
@@ -18,6 +19,8 @@ type AirportPageAsideProps = {
 export const AirportPageAside = (props: AirportPageAsideProps) => {
   const { icao, chartId } = useParams()
   const [view, setView] = useState(chartId ? AirportViewEnum.CHARTS : AirportViewEnum.INFO)
+
+  const airportLayoutStore = useAirportLayoutStore()
 
   if (props.isLoading) return (
     <Styles.LoadingContainer>
@@ -30,7 +33,8 @@ export const AirportPageAside = (props: AirportPageAsideProps) => {
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      overflowY: 'hidden'
+      overflowY: 'hidden',
+      flex: 1
     }}>
       {/* <Box marginBottom={3} display="flex" justifyContent="space-between" alignItems="center">
         <Heading as="h4" sx={{mb: 0}}>{icao?.toUpperCase()}</Heading>
@@ -39,14 +43,24 @@ export const AirportPageAside = (props: AirportPageAsideProps) => {
       <Styles.Header>
         <PageHeader>
           <PageHeader.TitleArea>
+            <PageHeader.LeadingAction>
+              <IconButton
+                aria-label="Expand"
+                icon={SidebarExpandIcon}
+                variant="invisible"
+                onClick={() => airportLayoutStore.changeSidebar(false)}
+              />
+            </PageHeader.LeadingAction>
             <PageHeader.Title>{icao?.toUpperCase()}</PageHeader.Title>
             <PageHeader.Actions>
-              <IconButton aria-label="Workflows" icon={StarIcon} />
+              <IconButton aria-label="Workflows" icon={StarIcon}/>
             </PageHeader.Actions>
           </PageHeader.TitleArea>
         </PageHeader>
       </Styles.Header>
-      <SegmentedControl fullWidth aria-label="File view" size="small">
+      <SegmentedControl fullWidth aria-label="File view" size="small" sx={{
+        minHeight: '28px'
+      }}>
         {
           Object.values(AirportViewEnum).map(item => (
             <SegmentedControl.Button

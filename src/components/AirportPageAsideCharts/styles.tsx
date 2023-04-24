@@ -19,6 +19,8 @@ export const Content = styled.div`
   flex: 1;
   min-height: 0;
   overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
 
   &::-webkit-scrollbar {
     width: 0;
@@ -31,4 +33,5 @@ export const ContentEmpty = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 1;
 `

@@ -8,6 +8,7 @@ import * as Styles from './styles'
 import { AirportPageAside } from '../../components/AirportPageAside'
 
 import { useAirportStore } from "../../stores/airportStore";
+import { DonationModal } from "../../components/DonationModal";
 
 export const AirportPage = () => {
   const { icao, chartId } = useParams();
@@ -19,7 +20,7 @@ export const AirportPage = () => {
       airportStore.fetchAirport(icao!)
     }
 
-    fetchAirport()
+    if (airportStore.airport?.icao.toLowerCase() !== icao) fetchAirport()
 
     return () => {}
   }, [icao])
@@ -31,7 +32,12 @@ export const AirportPage = () => {
       </Styles.Container>
     )
 
-    if (chartId) return <Outlet />
+    if (chartId) return (
+      <>
+        <Outlet />
+        <DonationModal />
+      </>
+    )
 
     return (
       <Styles.Container>

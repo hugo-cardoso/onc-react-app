@@ -49,3 +49,8 @@ export enum Theme {
   LIGHT = 'light',
   DARK = 'dark',
 }
+
+export type DonationLink = {
+  link: string;
+  value: number;
+}
