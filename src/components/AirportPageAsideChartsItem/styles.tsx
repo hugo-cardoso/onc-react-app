@@ -27,6 +27,12 @@ export const ChartItem = styled.a<{
     text-decoration: none;
   }
 
+  & > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   & > svg {
     fill: ${({ active }) => active ? themeGet('colors.border.accent') : themeGet('colors.fg.muted')};
   }

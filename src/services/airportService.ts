@@ -20,15 +20,23 @@ export function airportService() {
       charts: airport.charts.map((chart: any) => ({
         ...chart,
         id: chart._id,
-        type: [ChartTypeEnum.ADC, ChartTypeEnum.PDC].includes(chart.type) ? ChartTypeEnum.TAXI : chart.type,
+        type: [ChartTypeEnum.ADC, ChartTypeEnum.PDC, ChartTypeEnum.GMC].includes(chart.type) ? ChartTypeEnum.TAXI : chart.type,
       })),
       runways: airport.runways,
       location: airport.location,
     }
   };
 
+  const getAirportMetar = async (icao: string): Promise<string> => {
+    const metar = await fetch(`https://api.opennavcharts.com.br/api/metar?icao=${icao}`)
+      .then((response) => response.text())
+
+    return metar;
+  };
+
   return {
     getAirportsICAO,
     getAirport,
+    getAirportMetar,
   };
 }

@@ -70,7 +70,6 @@ export function HeaderGlobal() {
                     navigate(`/app/airport/${v.at(0).id.toLowerCase()}`)
                   }}
                   selectedItemIds={[]}
-                  aria-labelledby="autocompleteLabel-basic"
                 />
               </Autocomplete.Overlay>
             )

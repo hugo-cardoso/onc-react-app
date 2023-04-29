@@ -33,6 +33,7 @@ export function AirportPageAsideChartsItem(props: AirportPageAsideChartsItemProp
       onClick={handleClickChartItem}
       active={chart.id === chartId}
       href={`/app/airport/${airportStore.airport?.icao.toLowerCase()}/chart/${chart.id}`}
+      title={chart.name}
     >
       <span style={{
         flex: 1,

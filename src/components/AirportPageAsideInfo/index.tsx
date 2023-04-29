@@ -1,27 +1,36 @@
-import { Heading, Text, Box } from '@primer/react'
+import { Text, IconButton, Tooltip } from '@primer/react'
 import { useAirportStore } from '../../stores/airportStore'
+
+import * as Styles from './styles'
+import { SyncIcon } from '@primer/octicons-react'
 
 export function AirportPageAsideInfo() {
   const airportStore = useAirportStore()
 
   return (
     <>
-      <Box sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        mb: 3,
-      }}>
-        <Text sx={{fontWeight: 'bold'}}>Name</Text>
+      <Styles.InfoBox>
+        <Text fontWeight="bold">Name</Text>
         <Text>{airportStore.airport?.name}</Text>
-      </Box>
-      <Box sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        mb: 3,
-      }}>
-        <Text sx={{fontWeight: 'bold'}}>Location</Text>
+      </Styles.InfoBox>
+      <Styles.InfoBox>
+        <Text fontWeight="bold">Location</Text>
         <Text>{airportStore.airport?.location.city} - {airportStore.airport?.location.state}</Text>
-      </Box>
+      </Styles.InfoBox>
+      <Styles.InfoBox>
+        <Text fontWeight="bold">METAR</Text>
+        <Styles.InfoBoxActionContent>
+          <Text>{airportStore.isLoadingMetar ? 'Loading...' : airportStore.metar}</Text>
+          <Tooltip aria-label="Refresh" direction="n">
+            <IconButton
+              aria-label="Theme"
+              icon={SyncIcon}
+              onClick={() => airportStore.fetchAirportMetar(airportStore.airport?.icao!)}
+              disabled={airportStore.isLoadingMetar}
+            />
+          </Tooltip>
+        </Styles.InfoBoxActionContent>
+      </Styles.InfoBox>
     </>
   )
 }

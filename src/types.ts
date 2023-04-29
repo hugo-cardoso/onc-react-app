@@ -5,6 +5,7 @@ export enum ChartTypeEnum {
   SID = 'SID',
   ADC = 'ADC',
   PDC = 'PDC',
+  GMC = 'GMC',
 }
 
 export type Chart = {

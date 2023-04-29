@@ -6,27 +6,7 @@ import * as Styles from './styles'
 
 import { DONATION_LINKS, DONATION_TEXT } from '../../constants'
 
-type PixItem = {
-  link: string;
-  value: number;
-}
-
 export const HomePage = () => {
-  const pixItems: PixItem[] = [
-    {
-      link: "https://mpago.la/2RJgas1",
-      value: 5,
-    },
-    {
-      link: "https://mpago.la/2Q4V9EW",
-      value: 15,
-    },
-    {
-      link: "https://mpago.la/2oQGU5p",
-      value: 10,
-    }
-  ];
-
   return (
     <>
       <HeaderGlobal />

@@ -36,21 +36,21 @@ export const AirportPageAside = (props: AirportPageAsideProps) => {
       overflowY: 'hidden',
       flex: 1
     }}>
-      {/* <Box marginBottom={3} display="flex" justifyContent="space-between" alignItems="center">
-        <Heading as="h4" sx={{mb: 0}}>{icao?.toUpperCase()}</Heading>
-        <IconButton aria-label="" icon={StarIcon} />
-      </Box> */}
       <Styles.Header>
         <PageHeader>
           <PageHeader.TitleArea>
-            <PageHeader.LeadingAction>
-              <IconButton
-                aria-label="Expand"
-                icon={SidebarExpandIcon}
-                variant="invisible"
-                onClick={() => airportLayoutStore.changeSidebar(false)}
-              />
-            </PageHeader.LeadingAction>
+            {
+              chartId && (
+                <PageHeader.LeadingAction>
+                  <IconButton
+                    aria-label="Expand"
+                    icon={SidebarExpandIcon}
+                    variant="invisible"
+                    onClick={() => airportLayoutStore.changeSidebar(false)}
+                  />
+                </PageHeader.LeadingAction>
+              )
+            }
             <PageHeader.Title>{icao?.toUpperCase()}</PageHeader.Title>
             <PageHeader.Actions>
               <IconButton aria-label="Workflows" icon={StarIcon}/>
@@ -58,9 +58,14 @@ export const AirportPageAside = (props: AirportPageAsideProps) => {
           </PageHeader.TitleArea>
         </PageHeader>
       </Styles.Header>
-      <SegmentedControl fullWidth aria-label="File view" size="small" sx={{
-        minHeight: '28px'
-      }}>
+      <SegmentedControl
+        fullWidth
+        size="small"
+        sx={{
+          minHeight: '28px'
+        }}
+        aria-label='view control'
+      >
         {
           Object.values(AirportViewEnum).map(item => (
             <SegmentedControl.Button
