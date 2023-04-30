@@ -16,3 +16,4 @@ export const DONATION_LINKS: DonationLink[] = [
 ];
 
 export const DONATION_TEXT = "Enjoying? Make a donation to the project 💵";
+export const DONATION_TEXT_COFFE = "Enjoying? Buy me a coffee! ☕";

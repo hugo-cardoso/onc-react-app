@@ -3,7 +3,7 @@ import { Dialog } from '@primer/react/drafts'
 import { Button, Text } from '@primer/react'
 import { useParams } from 'react-router-dom'
 
-import { DONATION_LINKS, DONATION_TEXT } from '../../constants'
+import { DONATION_LINKS, DONATION_TEXT_COFFE } from '../../constants'
 
 import * as Styles from './styles'
 
@@ -39,7 +39,7 @@ export const DonationModal = () => {
       <Button onClick={openDialog}>Open</Button>
       {isOpen && (
         <Dialog
-          title={DONATION_TEXT}
+          title={DONATION_TEXT_COFFE}
           footerButtons={[
             {
               content: 'No, thanks!',
