@@ -16,12 +16,22 @@ export const LayoutAside = styled.aside`
   border-right: 1px solid var(--color-border-muted);
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 768px) {
+    width: 100vw;
+    min-width: 100vw;
+    z-index: 1;
+  }
 `
 
 export const LayoutMain = styled.main`
   flex: 1;
   overflow: hidden;
   padding-left: 350px;
+
+  @media (max-width: 768px) {
+    padding-left: 0;
+  }
 `
 
 export const Layout = styled.div<LayoutProps>`
@@ -35,6 +45,10 @@ export const Layout = styled.div<LayoutProps>`
   ${props => !props.isOpenSidebar && css`
     ${LayoutAside} {
       left: -350px;
+
+      @media (max-width: 768px) {
+        left: -100vw;
+      }
     }
 
     ${LayoutMain} {

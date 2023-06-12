@@ -1,4 +1,5 @@
 import { HeaderGlobal } from '../../components/HeaderGlobal'
+import { SearchModal } from '../../components/SearchModal'
 import * as Styles from './styles'
 import { useAirportLayoutStore } from '../../stores/airportLayoutStore'
 
@@ -8,7 +9,7 @@ type LayoutAirportProps = {
 }
 
 export function LayoutAirport(props: LayoutAirportProps) {
-  const airportLayoutStore = useAirportLayoutStore()
+  const airportLayoutStore = useAirportLayoutStore();
 
   return (
     (
@@ -24,6 +25,7 @@ export function LayoutAirport(props: LayoutAirportProps) {
             { props.children }
           </Styles.LayoutMain>
         </Styles.Layout>
+        <SearchModal />
       </>
     )
   )

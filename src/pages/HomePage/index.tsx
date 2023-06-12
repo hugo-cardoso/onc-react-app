@@ -5,8 +5,12 @@ import { HeaderGlobal } from '../../components/HeaderGlobal'
 import * as Styles from './styles'
 
 import { DONATION_LINKS, DONATION_TEXT } from '../../constants'
+import { SearchModal } from '../../components/SearchModal'
+import { useAirportSearchStore } from '../../stores/airportSearchStore'
 
 export const HomePage = () => {
+  const airportSearchStore = useAirportSearchStore();
+
   return (
     <>
       <HeaderGlobal />
@@ -33,6 +37,7 @@ export const HomePage = () => {
           </Styles.SupportCards>
         </Styles.SupportContainer>
       </Styles.Container>
+      <SearchModal />
     </>
   )
 }

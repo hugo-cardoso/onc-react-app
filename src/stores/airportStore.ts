@@ -4,22 +4,17 @@ import { airportService } from '../services/airportService'
 
 type AirportStore = {
   airport?: Airport;
-  icaos: string[];
   metar: string;
   isLoading: boolean;
-  isLoadingICAOS: boolean;
   isLoadingMetar: boolean;
   fetchAirport: (icao: string) => Promise<void>;
-  fetchAirportICAOS: () => Promise<void>;
   fetchAirportMetar: (icao: string) => Promise<void>;
 }
 
 export const useAirportStore = create<AirportStore>((set) => ({
   airport: undefined,
-  icaos: [],
   metar: '',
   isLoading: true,
-  isLoadingICAOS: true,
   isLoadingMetar: true,
   fetchAirport: async (icao: string) => {
     set({
@@ -37,16 +32,6 @@ export const useAirportStore = create<AirportStore>((set) => ({
       metar,
       isLoading: false,
       isLoadingMetar: false,
-    }))
-  },
-  fetchAirportICAOS: async () => {
-    set({ isLoadingICAOS: true })
-
-    const icaos = await airportService().getAirportsICAO();
-
-    set(() => ({
-      icaos,
-      isLoadingICAOS: false,
     }))
   },
   fetchAirportMetar: async (icao: string) => {

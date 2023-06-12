@@ -10,7 +10,7 @@ export function airportService() {
   }
 
   const getAirport = async (icao: string): Promise<Airport> => {
-    const airport = await fetch(`https://api.opennavcharts.com.br/api/search/airport?icao=${icao}`)
+    const airport = await fetch(`https://api.opennavcharts.com.br/api/search/airport/${icao}`)
       .then((response) => response.json())
 
     return {
@@ -34,9 +34,17 @@ export function airportService() {
     return metar;
   };
 
+  const getAirportsTopSearch = async (): Promise<string[]> => {
+    const airports = await fetch(`https://api.opennavcharts.com.br/api/search/airport/topsearch`)
+      .then((response) => response.json())
+
+    return airports.map((airport: any) => airport._id);
+  };
+
   return {
     getAirportsICAO,
     getAirport,
     getAirportMetar,
+    getAirportsTopSearch,
   };
 }

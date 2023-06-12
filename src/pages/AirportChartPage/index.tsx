@@ -11,6 +11,7 @@ import { PinIcon, ShareIcon, XIcon, ZoomInIcon, ZoomOutIcon, ChevronLeftIcon, Ch
 import { useAirportStore } from "../../stores/airportStore"
 import { PDFPageProxy } from 'react-pdf'
 import { useAirportLayoutStore } from '../../stores/airportLayoutStore'
+import { useIsMobile } from '../../hooks/isMobile'
 
 const ZOOM_SCALE_MAP = [
   1,
@@ -41,6 +42,7 @@ export const AirportChartPage = () => {
   const chartElement = useRef<HTMLDivElement | null>()
   const chartContainerElement = useRef<HTMLDivElement | null>()
   const [chartHeight, setChartHeight] = useState(0)
+  const { isMobile } = useIsMobile()
 
   const [enabledScroll, setEnabledScroll] = useState(false)
 
@@ -71,6 +73,10 @@ export const AirportChartPage = () => {
   useEffect(() => {
     setIsLoading(true);
 
+    if (isMobile) {
+      airportLayoutStore.changeSidebar(false)
+    }
+
     return () => {
       setIsLoading(true);
       setPageNumber(1);
@@ -90,6 +96,10 @@ export const AirportChartPage = () => {
     };
 
     window.document.addEventListener('resize', handleWindowResize);
+
+    if (isMobile) {
+      airportLayoutStore.changeSidebar(false)
+    }
 
     return () => {
       window.document.removeEventListener('resize', handleWindowResize);

@@ -1,79 +1,40 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Header, Autocomplete, IconButton } from '@primer/react'
 import { SearchIcon, SunIcon, MoonIcon } from '@primer/octicons-react';
-import { useEffect, useState } from 'react';
 import { useThemeStore } from '../../stores/themeStore';
 import { Theme } from '../../types';
-import { useAirportStore } from '../../stores/airportStore';
+import { useAirportSearchStore } from '../../stores/airportSearchStore';
+import { useIsMobile } from '../../hooks/isMobile'
 
 import packageJson from "../../../package.json";
 
 export function HeaderGlobal() {
-  const { icao } = useParams()
-  const [query, setQuery] = useState<string>(icao?.toLocaleUpperCase() || "");
   const navigate = useNavigate();
-  const airportStore = useAirportStore();
+  const airportSearchStore = useAirportSearchStore();
   const themeStore = useThemeStore();
+  const { isMobile } = useIsMobile();
 
   const appVersion = packageJson.version;
-
-  const handleKeyDownSearchInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== 'Enter' || !query.trim().length) return
-
-    if (airportStore.icaos.find(icao => icao.toLowerCase() === query.toLowerCase()) === undefined) return
-
-    navigate(`/app/airport/${query.toLowerCase()}`)
-  }
 
   const handleClickThemeButton = () => {
     themeStore.toggle();
   }
 
-  useEffect(() => {
-    const fetchAirportsICAO = async () => {
-      airportStore.fetchAirportICAOS();
-    };
-
-    if (!airportStore.icaos.length) {
-      fetchAirportsICAO();
-    }
-
-    return () => {}
-  }, []);
-
   return (
     <Header>
       <Header.Item>
         <Header.Link sx={{fontSize: 3}} onClick={() => navigate("/")}>
-          <span>Open Nav Charts</span>
+          <span>{ isMobile ? 'ONC' : 'Open Nav Charts' }</span>
         </Header.Link>
       </Header.Item>
       <Header.Item>
         <Autocomplete>
           <Autocomplete.Input
             trailingVisual={SearchIcon}
-            onChange={e => setQuery(e.target.value)}
-            onKeyDown={handleKeyDownSearchInput}
-            value={query}
             placeholder="Search ICAO"
-            disabled={airportStore.isLoadingICAOS}
+            onClick={() => airportSearchStore.setIsOpen(true)}
+            readOnly
           />
-          {
-            query.trim().length >= 3 && (
-              <Autocomplete.Overlay>
-                <Autocomplete.Menu
-                  loading={airportStore.isLoadingICAOS}
-                  items={airportStore.icaos.map(icao => ({text: icao, id: icao}))}
-                  selectionVariant="single"
-                  onSelectedChange={(v: any) => {
-                    setQuery(v.at(0).id);
-                    navigate(`/app/airport/${v.at(0).id.toLowerCase()}`)
-                  }}
-                  selectedItemIds={[]}
-                />
-              </Autocomplete.Overlay>
-            )
-          }
         </Autocomplete>
       </Header.Item>
       <Header.Item full>
