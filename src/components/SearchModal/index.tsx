@@ -20,7 +20,6 @@ export function SearchModal() {
   } = airportSearchStore;
 
   const inputQueryRef = useRef<HTMLInputElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
   const modalRef = useOnclickOutside(() => {
     if (isOpen) {
       airportSearchStore.setIsOpen(false);
@@ -44,18 +43,6 @@ export function SearchModal() {
     changeQuery(value);
   }
 
-  function handleClickWrapper(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    if (wrapperRef.current?.contains(event.currentTarget as Node)) {
-      console.log("inner")
-
-      return;
-    }
-
-    console.log("out")
-
-    airportSearchStore.setIsOpen(false);
-  }
-
   useEffect(() => {
     const getTopSearchs = async () => {
       await airportSearchStore.fetchTopSearchs();
@@ -73,7 +60,33 @@ export function SearchModal() {
       getIcaos();
     }
 
-    return () => {};
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        airportSearchStore.setIsOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === '/') {
+        event.preventDefault();
+        airportSearchStore.setIsOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   useEffect(() => {
@@ -84,9 +97,7 @@ export function SearchModal() {
 
   return (
     <>
-      <Wrapper
-        isOpen={isOpen}
-      >
+      <Wrapper isOpen={isOpen}>
         <Container>
           <Modal ref={modalRef}>
             <SearchInputWrapper>

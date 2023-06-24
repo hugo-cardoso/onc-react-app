@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
-import { Header, Autocomplete, IconButton } from '@primer/react'
+import { Header, TextInput, IconButton } from '@primer/react'
 import { SearchIcon, SunIcon, MoonIcon } from '@primer/octicons-react';
 import { useThemeStore } from '../../stores/themeStore';
 import { Theme } from '../../types';
@@ -20,6 +21,21 @@ export function HeaderGlobal() {
     themeStore.toggle();
   }
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === '/') {
+        event.preventDefault();
+        airportSearchStore.setIsOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
     <Header>
       <Header.Item>
@@ -28,14 +44,12 @@ export function HeaderGlobal() {
         </Header.Link>
       </Header.Item>
       <Header.Item>
-        <Autocomplete>
-          <Autocomplete.Input
-            trailingVisual={SearchIcon}
-            placeholder="Search ICAO"
-            onClick={() => airportSearchStore.setIsOpen(true)}
-            readOnly
-          />
-        </Autocomplete>
+        <TextInput
+          trailingVisual={SearchIcon}
+          placeholder="Type / to search"
+          onClick={() => airportSearchStore.setIsOpen(true)}
+          readOnly
+        />
       </Header.Item>
       <Header.Item full>
         <Header.Link onClick={() => navigate("/about")}>About</Header.Link>
