@@ -1,5 +1,6 @@
 import { HeaderGlobal } from '../../components/HeaderGlobal'
 import { SearchModal } from '../../components/SearchModal'
+import { FavoritesModal } from '../../components/FavoritesModal'
 import * as Styles from './styles'
 import { useAirportLayoutStore } from '../../stores/airportLayoutStore'
 
@@ -26,6 +27,7 @@ export function LayoutAirport(props: LayoutAirportProps) {
           </Styles.LayoutMain>
         </Styles.Layout>
         <SearchModal />
+        <FavoritesModal />
       </>
     )
   )

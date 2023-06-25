@@ -2,14 +2,17 @@ import debounce from 'lodash/debounce'
 import { TextInput, ActionList, Text } from '@primer/react';
 import { XIcon } from '@primer/octicons-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { Wrapper, Container, Modal, SearchInputWrapper, ListDivider, EmptyResult } from './styles'
+import { Modal, SearchInputWrapper, ListDivider, EmptyResult } from './styles'
 import { useAirportSearchStore } from '../../stores/airportSearchStore'
 import { useNavigate } from 'react-router-dom';
 import useOnclickOutside from "react-cool-onclickoutside";
+import { BaseModal } from "../BaseModal";
+import { useModal, ModalTypeEnum } from "../../hooks/useModal";
 
 export function SearchModal() {
 
   const navigate = useNavigate();
+  const modal = useModal();
   const airportSearchStore = useAirportSearchStore();
   const {
     icaos,
@@ -21,9 +24,7 @@ export function SearchModal() {
 
   const inputQueryRef = useRef<HTMLInputElement>(null);
   const modalRef = useOnclickOutside(() => {
-    if (isOpen) {
-      airportSearchStore.setIsOpen(false);
-    }
+    if (isOpen) modal.close();
   });
 
   const [query, setQuery] = useState<string>('');
@@ -33,8 +34,8 @@ export function SearchModal() {
   const changeQuery = useCallback(debounce((value: string) => setQuery(value),  500), []);
 
   function handleClickResult(airport: string) {
+    modal.close();
     navigate(`/app/airport/${airport.toLowerCase()}`);
-    airportSearchStore.setIsOpen(false);
   }
 
   function handleQueryInputChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -60,25 +61,14 @@ export function SearchModal() {
       getIcaos();
     }
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        airportSearchStore.setIsOpen(false);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => {};
   }, []);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === '/') {
         event.preventDefault();
-        airportSearchStore.setIsOpen(true);
+        modal.open(ModalTypeEnum.AIRPORT_SEARCH);
       }
     };
 
@@ -97,91 +87,92 @@ export function SearchModal() {
 
   return (
     <>
-      <Wrapper isOpen={isOpen}>
-        <Container>
-          <Modal ref={modalRef}>
-            <SearchInputWrapper>
-              <TextInput
-                ref={inputQueryRef}
-                size='large'
-                sx={{
-                  width: '100%',
-                }}
-                placeholder='Search by ICAO'
-                trailingAction={
-                  query.length ? (
-                    <TextInput.Action
-                      onClick={() => {
-                        setQuery('');
-                        inputQueryRef.current!.value = '';
-                      }}
-                      icon={XIcon}
-                      aria-label="Clear input"
-                      sx={{color: 'fg.subtle'}}
-                    />
-                  ) : undefined
-                }
-                onChange={handleQueryInputChange}
-                loading={isLoadingICAOS || isLoadingTopSearchs}
-                disabled={isLoadingICAOS || isLoadingTopSearchs}
-                contrast
-              />
-            </SearchInputWrapper>
-            {
-              searchResult.length > 0 && (
-                <>
-                  <ListDivider />
-                  <ActionList>
-                    <ActionList.Group title="Results">
-                      {
-                        [...searchResult].slice(0, 8).map((airport) => (
-                          <ActionList.Item
-                            key={airport}
-                            onClick={() => handleClickResult(airport)}
-                          >
-                            { airport }
-                          </ActionList.Item>
-                        ))
-                      }
-                    </ActionList.Group>
-                  </ActionList>
-                </>
-              )
-            }
-            {
-              !searchResult.length && query.length >= 3 && (
-                <>
-                  <ListDivider />
-                  <EmptyResult>
-                    <Text>No results found</Text>
-                  </EmptyResult>
-                </>
-              )
-            }
-            {
-              topSearchs.length > 0 && (
-                <>
-                  <ListDivider />
-                  <ActionList>
-                    <ActionList.Group title="Top Searched">
-                      {
-                        topSearchs.map((airport) => (
-                          <ActionList.Item
-                            key={airport}
-                            onClick={() => handleClickResult(airport)}
-                          >
-                            { airport }
-                          </ActionList.Item>
-                        ))
-                      }
-                    </ActionList.Group>
-                  </ActionList>
-                </>
-              )
-            }
-          </Modal>
-        </Container>
-      </Wrapper>
+      <BaseModal
+        isOpen={isOpen}
+        onEscape={() => modal.close()}
+      >
+        <Modal ref={modalRef}>
+          <SearchInputWrapper>
+            <TextInput
+              ref={inputQueryRef}
+              size='large'
+              sx={{
+                width: '100%',
+              }}
+              placeholder='Search by ICAO'
+              trailingAction={
+                query.length ? (
+                  <TextInput.Action
+                    onClick={() => {
+                      setQuery('');
+                      inputQueryRef.current!.value = '';
+                    }}
+                    icon={XIcon}
+                    aria-label="Clear input"
+                    sx={{color: 'fg.subtle'}}
+                  />
+                ) : undefined
+              }
+              onChange={handleQueryInputChange}
+              loading={isLoadingICAOS || isLoadingTopSearchs}
+              disabled={isLoadingICAOS || isLoadingTopSearchs}
+              contrast
+            />
+          </SearchInputWrapper>
+          {
+            searchResult.length > 0 && (
+              <>
+                <ListDivider />
+                <ActionList>
+                  <ActionList.Group title="Results">
+                    {
+                      [...searchResult].slice(0, 8).map((airport) => (
+                        <ActionList.Item
+                          key={airport}
+                          onClick={() => handleClickResult(airport)}
+                        >
+                          { airport }
+                        </ActionList.Item>
+                      ))
+                    }
+                  </ActionList.Group>
+                </ActionList>
+              </>
+            )
+          }
+          {
+            !searchResult.length && query.length >= 3 && (
+              <>
+                <ListDivider />
+                <EmptyResult>
+                  <Text>No results found</Text>
+                </EmptyResult>
+              </>
+            )
+          }
+          {
+            topSearchs.length > 0 && (
+              <>
+                <ListDivider />
+                <ActionList>
+                  <ActionList.Group title="Top Searched">
+                    {
+                      topSearchs.map((airport) => (
+                        <ActionList.Item
+                          key={airport}
+                          onClick={() => handleClickResult(airport)}
+                        >
+                          { airport }
+                        </ActionList.Item>
+                      ))
+                    }
+                  </ActionList.Group>
+                </ActionList>
+              </>
+            )
+          }
+        </Modal>
+      </BaseModal>
     </>
   );
 }

@@ -1,5 +1,7 @@
 import { Airport, ChartTypeEnum } from '../types'
 
+const LOCAL_STORAGE_FAVORITE_AIRPORTS = 'favoriteAirports';
+
 export function airportService() {
 
   const getAirportsICAO = async (): Promise<string[]> => {
@@ -41,10 +43,26 @@ export function airportService() {
     return airports.map((airport: any) => airport._id);
   };
 
+  const getFavoriteAirports = async (): Promise<string[]> => {
+    const favoriteAirports = localStorage.getItem(LOCAL_STORAGE_FAVORITE_AIRPORTS);
+
+    if (favoriteAirports) {
+      return JSON.parse(favoriteAirports);
+    }
+
+    return [];
+  };
+
+  const setFavoriteAirports = async (airports: string[]): Promise<void> => {
+    localStorage.setItem(LOCAL_STORAGE_FAVORITE_AIRPORTS, JSON.stringify(airports));
+  }
+
   return {
     getAirportsICAO,
     getAirport,
     getAirportMetar,
     getAirportsTopSearch,
+    getFavoriteAirports,
+    setFavoriteAirports,
   };
 }

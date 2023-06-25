@@ -4,14 +4,14 @@ import { Header, TextInput, IconButton } from '@primer/react'
 import { SearchIcon, SunIcon, MoonIcon } from '@primer/octicons-react';
 import { useThemeStore } from '../../stores/themeStore';
 import { Theme } from '../../types';
-import { useAirportSearchStore } from '../../stores/airportSearchStore';
 import { useIsMobile } from '../../hooks/isMobile'
+import { useModal, ModalTypeEnum } from '../../hooks/useModal'
 
 import packageJson from "../../../package.json";
 
 export function HeaderGlobal() {
   const navigate = useNavigate();
-  const airportSearchStore = useAirportSearchStore();
+  const modal = useModal();
   const themeStore = useThemeStore();
   const { isMobile } = useIsMobile();
 
@@ -25,7 +25,7 @@ export function HeaderGlobal() {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === '/') {
         event.preventDefault();
-        airportSearchStore.setIsOpen(true);
+        modal.open(ModalTypeEnum.AIRPORT_SEARCH);
       }
     };
 
@@ -47,9 +47,12 @@ export function HeaderGlobal() {
         <TextInput
           trailingVisual={SearchIcon}
           placeholder="Type / to search"
-          onClick={() => airportSearchStore.setIsOpen(true)}
+          onClick={() => modal.open(ModalTypeEnum.AIRPORT_SEARCH)}
           readOnly
         />
+      </Header.Item>
+      <Header.Item>
+        <Header.Link onClick={() => modal.open(ModalTypeEnum.AIRPORT_FAVORITES)}>Favorites</Header.Link>
       </Header.Item>
       <Header.Item full>
         <Header.Link onClick={() => navigate("/about")}>About</Header.Link>

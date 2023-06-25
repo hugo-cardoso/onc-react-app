@@ -1,6 +1,6 @@
 import { SegmentedControl, Box, TextInput, Spinner, Heading, IconButton, Button } from '@primer/react'
 import { PageHeader } from '@primer/react/drafts'
-import { SidebarExpandIcon, StarIcon } from '@primer/octicons-react'
+import { SidebarExpandIcon, StarIcon, StarFillIcon } from '@primer/octicons-react'
 import { useParams } from 'react-router-dom'
 
 import { AirportPageAsideCharts } from '../AirportPageAsideCharts'
@@ -10,6 +10,7 @@ import * as Styles from './styles'
 import { Airport, AirportViewEnum } from '../../types'
 import { useState } from 'react'
 import { useAirportLayoutStore } from '../../stores/airportLayoutStore'
+import { useAirportFavoritesStore } from '../../stores/airportFavoritesModal'
 
 type AirportPageAsideProps = {
   isLoading: boolean;
@@ -21,6 +22,9 @@ export const AirportPageAside = (props: AirportPageAsideProps) => {
   const [view, setView] = useState(chartId ? AirportViewEnum.CHARTS : AirportViewEnum.INFO)
 
   const airportLayoutStore = useAirportLayoutStore()
+  const airportFavoritesStore = useAirportFavoritesStore();
+
+  const hasFavorite = airportFavoritesStore.airports.includes(icao!);
 
   if (props.isLoading) return (
     <Styles.LoadingContainer>
@@ -53,7 +57,17 @@ export const AirportPageAside = (props: AirportPageAsideProps) => {
             }
             <PageHeader.Title>{icao?.toUpperCase()}</PageHeader.Title>
             <PageHeader.Actions>
-              <IconButton aria-label="Workflows" icon={StarIcon}/>
+              <IconButton
+                aria-labelledby="favorite"
+                icon={hasFavorite ? StarFillIcon : StarIcon}
+                onClick={() => {
+                  if (hasFavorite) {
+                    airportFavoritesStore.removeAirport(icao!)
+                  } else {
+                    airportFavoritesStore.addAirport(icao!)
+                  }
+                }}
+              />
             </PageHeader.Actions>
           </PageHeader.TitleArea>
         </PageHeader>
