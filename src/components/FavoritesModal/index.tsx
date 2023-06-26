@@ -3,10 +3,9 @@ import { useAirportFavoritesStore } from "../../stores/airportFavoritesModal";
 import { Modal, ModalHeader, ModalContainer, ModalTabs, AirportList, ListItem } from "./styles";
 import { Heading, IconButton, SegmentedControl } from "@primer/react";
 import { XIcon } from "@primer/octicons-react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../hooks/useModal";
-import useOnclickOutside from "react-cool-onclickoutside";
 
 enum tabViewEnum {
   AIRPORTS = 'AIRPORTS',
@@ -29,15 +28,11 @@ const tabs: {
   }
 ]
 
-export const FavoritesModal = () => {
+export const FavoritesModal = React.forwardRef<HTMLDivElement>((props, modalRef) => {
   const navigate = useNavigate();
   const modal = useModal();
   const airportFavoritesStore = useAirportFavoritesStore();
   const [activeIndexTab, setActiveIndexTab] = useState<number>(0);
-
-  const modalRef = useOnclickOutside(() => {
-    if (airportFavoritesStore.isOpen) modal.close();
-  });
 
   const handleClickAirport = (airport: string) => {
     modal.close();
@@ -51,7 +46,8 @@ export const FavoritesModal = () => {
   return (
     <BaseModal
       isOpen={airportFavoritesStore.isOpen}
-      onEscape={() => airportFavoritesStore.setIsOpen(false)}
+      onEscape={() => modal.close()}
+      onClose={() => modal.close()}
     >
       <Modal ref={modalRef}>
         <ModalHeader>
@@ -60,12 +56,12 @@ export const FavoritesModal = () => {
             aria-label="Search"
             icon={XIcon}
             variant="invisible"
-            onClick={() => airportFavoritesStore.setIsOpen(false)}
+            onClick={() => modal.close()}
           />
         </ModalHeader>
         <ModalContainer>
           <ModalTabs>
-            <SegmentedControl>
+            <SegmentedControl aria-labelledby="view-selector">
               {
                 tabs.map((tab, index) => (
                   <SegmentedControl.Button
@@ -112,4 +108,4 @@ export const FavoritesModal = () => {
       </Modal>
     </BaseModal>
   );
-};
+});

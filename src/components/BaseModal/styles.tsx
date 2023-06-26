@@ -25,3 +25,5 @@ export const Container = styled.div`
   padding: ${themeGet('space.3')};
   box-sizing: border-box;
 `;
+
+export const Content = styled.div``;

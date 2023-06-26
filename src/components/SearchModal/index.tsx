@@ -5,7 +5,6 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { Modal, SearchInputWrapper, ListDivider, EmptyResult } from './styles'
 import { useAirportSearchStore } from '../../stores/airportSearchStore'
 import { useNavigate } from 'react-router-dom';
-import useOnclickOutside from "react-cool-onclickoutside";
 import { BaseModal } from "../BaseModal";
 import { useModal, ModalTypeEnum } from "../../hooks/useModal";
 
@@ -23,9 +22,6 @@ export function SearchModal() {
   } = airportSearchStore;
 
   const inputQueryRef = useRef<HTMLInputElement>(null);
-  const modalRef = useOnclickOutside(() => {
-    if (isOpen) modal.close();
-  });
 
   const [query, setQuery] = useState<string>('');
 
@@ -90,8 +86,9 @@ export function SearchModal() {
       <BaseModal
         isOpen={isOpen}
         onEscape={() => modal.close()}
+        onClose={() => modal.close()}
       >
-        <Modal ref={modalRef}>
+        <Modal>
           <SearchInputWrapper>
             <TextInput
               ref={inputQueryRef}
